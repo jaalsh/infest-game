@@ -7,11 +7,11 @@ const tileStyle = {
     position: 'relative'
 };
 
-const Tile = ({ imageName }) => {
+const Tile = ({ imageName, title }) => {
     const imageSource = `${process.env.PUBLIC_URL}/assets/images/tiles/${imageName}.png`
 
     return (
-        <img style={tileStyle} src={imageSource} width={dimension} height={dimension} alt="base_tile" />
+        <img style={tileStyle} src={imageSource} width={dimension} height={dimension} alt="base_tile" title={title} />
     );
   };
 

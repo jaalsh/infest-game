@@ -1,15 +1,17 @@
 import React from 'react';
-import ConfigurableTile from './ConfigurableTile'
+import ConfigurableTile from './ConfigurableTile';
+import ConveyorConfig from './configs/ConveyorConfig';
+import MixingConfig from './configs/MixingConfig';
 
 var tileConfigs = [
     {name: 'conveyorUp', type: 'conveyor', direction: 'up'},
     {name: 'machine', type: 'machine'},
-    {name: 'mixing', type: 'mixing'},
+    {name: 'mixing', type: 'mixing', instructions:  []},
     {name: 'power', type: 'power'},
     {name: 'factory', type: 'factory_tile'}
 ];
 
-const TileSelector = ({selectedTile, onTileChanged}) => {  
+const TileSelector = ({selectedTile, onTileChanged}) => { 
     return <div><div style={{ display: 'flex' }}>
         {tileConfigs.map((t, i) => {
             return (
@@ -19,7 +21,8 @@ const TileSelector = ({selectedTile, onTileChanged}) => {
         })}
     </div>
     <div style={{ padding: 5, height: 200}}>
-        <textarea style={{width: '100%', height: '100%'}}/>
+        {selectedTile.type === 'conveyor' ? <ConveyorConfig config={selectedTile} onConfigChange={(config) => onTileChanged({ ...selectedTile, ...config })} /> : 
+        selectedTile.type === 'mixing' ? <MixingConfig config={selectedTile} onConfigChange={(config) => onTileChanged({ ...selectedTile, ...config })} /> : null}
     </div>
     </div>
 }
