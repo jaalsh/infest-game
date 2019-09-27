@@ -1,7 +1,7 @@
 import React from 'react';
 import Tile from './Tile'
 
-const ConveyorTile = (direction) => {
+const ConveyorTile = ({direction}) => {
     return (
         <Tile imageName={`conveyor_${direction}.png`}/>
     );
