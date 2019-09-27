@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import Tile from './Tile';
 
 const Grid = ({ width, height }) => {
     const [tiles, setTiles] = useState(new Array(width * height).fill(null));
@@ -9,7 +10,7 @@ const Grid = ({ width, height }) => {
             gridTemplateColumns: `repeat(${width}, 64px)`,
             gridTemplateRows: `repeat(${height}, 64px)`
         }}>
-            {(tiles || []).map((t, i) => <div key={i} style={{ gridColumn: (i % width) + 1, gridRow: Math.floor(i / width) + 1}}>{i}</div>)}
+            {(tiles || []).map((t, i) => <div key={i} style={{ gridColumn: (i % width) + 1, gridRow: Math.floor(i / width) + 1}}><Tile imageUrl={`${process.env.PUBLIC_URL}/assets/images/tiles/factory_tile.png`}/></div>)}
         </div>
     )
 };
