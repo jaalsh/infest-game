@@ -1,26 +1,13 @@
 import React, {useState, useEffect} from 'react';
-import FactoryFloorTile from './tiles/FactoryFloorTile';
-import ConveyorTile from './tiles/ConveyorTile';
-import MachineTile from './tiles/MachineTile';
-import MixingTile from './tiles/MixingTile';
+import ConfigurableTile from './ConfigurableTile';
 
-const getTile = (type) => {
-    if(type === 'conveyor') {
-        return <ConveyorTile direction="left" />
-    }
-    if(type === 'factory floor') {
-        return <FactoryFloorTile />
-    }
-    if(type === 'machine') {
-        return <MachineTile />
-    }
-    if(type === 'mixing') {
-        return <MixingTile />
-    }
+const getTile = (config) => {
+    console.log(config)
+    return <ConfigurableTile config={config}/>;
 }
 
 const Grid = ({ width, height, selectedTile }) => {
-    const [tiles, setTiles] = useState(new Array(width * height).fill(null).map(() => <FactoryFloorTile />));
+    const [tiles, setTiles] = useState(new Array(width * height).fill(null).map(() => <ConfigurableTile config={{type: 'factory'}}/>));
 
     return (
         <div style={{

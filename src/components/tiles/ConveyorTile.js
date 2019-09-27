@@ -2,14 +2,14 @@ import React from 'react';
 import Tile from './Tile'
 import ConveyorBeltObject from '../objects/ConveyorBeltObject'
 
-const ConveyorTile = ({ direction, objectImageName }) => {
+const ConveyorTile = ({ config }) => {
     const renderObject = () => {
-        return objectImageName ? <ConveyorBeltObject objectImageName={objectImageName}/> : null;
+        return 'objectImageName' in config ? <ConveyorBeltObject objectImageName={config.objectImageName}/> : null;
     }
-    
+
     return (
         <>
-            <Tile imageName={`conveyor_${direction}.png`}/>
+            <Tile imageName={`conveyor_${config.direction}`}/>
             {renderObject()}
         </>
     );

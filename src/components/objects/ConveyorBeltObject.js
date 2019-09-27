@@ -8,7 +8,7 @@ const objectStyle = {
     top:-64
 };
 
-const Tile = ({ objectImageName }) => {
+const ConveyorBeltObject = ({ objectImageName }) => {
     const imageSource = `${process.env.PUBLIC_URL}/assets/images/objects/${objectImageName}.png`
 
     return (
@@ -16,4 +16,4 @@ const Tile = ({ objectImageName }) => {
     );
   };
 
-  export default Tile;
+  export default ConveyorBeltObject;
