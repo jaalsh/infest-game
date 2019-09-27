@@ -8,7 +8,10 @@ function App() {
   return (
     <div className="App" style={{display: 'flex'}}>
       <Grid  width={12} height={12} selectedTile={selectedTile}/>
-      <TileSelector selectedTile={selectedTile} onTileChanged={setSelectedTile} />
+      <div>
+        <TileSelector selectedTile={selectedTile} onTileChanged={setSelectedTile} />
+        <button>start the production line</button>
+      </div>
     </div>
   );
 }
