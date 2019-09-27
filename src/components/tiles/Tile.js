@@ -6,7 +6,7 @@ const Tile = ({ imageName }) => {
     const imageSource = `${process.env.PUBLIC_URL}/assets/images/tiles/${imageName}`
 
     return (
-        <img src={imageSource} width={dimension} height={dimension} />
+        <img src={imageSource} width={dimension} height={dimension} alt="factory_tile" />
     );
   };
 
