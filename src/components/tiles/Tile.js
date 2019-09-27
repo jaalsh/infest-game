@@ -8,10 +8,10 @@ const tileStyle = {
 };
 
 const Tile = ({ imageName }) => {
-    const imageSource = `${process.env.PUBLIC_URL}/assets/images/tiles/${imageName}`
+    const imageSource = `${process.env.PUBLIC_URL}/assets/images/tiles/${imageName}.png`
 
     return (
-        <img style={tileStyle} src={imageSource} width={dimension} height={dimension} alt="factory_tile" />
+        <img style={tileStyle} src={imageSource} width={dimension} height={dimension} alt="base_tile" />
     );
   };
 

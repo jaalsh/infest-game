@@ -3,7 +3,7 @@ import Tile from './Tile'
 
 const FactoryTile = () => {
     return (
-        <Tile imageName='factory_tile.png'/>
+        <Tile imageName='factory_tile'/>
     );
   };
 

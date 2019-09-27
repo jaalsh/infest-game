@@ -3,7 +3,7 @@ import Tile from './Tile'
 
 const MixingTile = () => {
     return (
-        <Tile imageName='mixing.png'/>
+        <Tile imageName='mixing'/>
     );
   };
 

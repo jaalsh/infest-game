@@ -3,7 +3,7 @@ import Tile from './Tile'
 
 const PowerTile = () => {
     return (
-        <Tile imageName='power.png'/>
+        <Tile imageName='power'/>
     );
   };
 
