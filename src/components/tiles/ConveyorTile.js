@@ -6,7 +6,7 @@ const ConveyorTile = ({ direction, objectImageName }) => {
     const renderObject = () => {
         return objectImageName ? <ConveyorBeltObject objectImageName={objectImageName}/> : null;
     }
-
+    
     return (
         <>
             <Tile imageName={`conveyor_${direction}.png`}/>
