@@ -13,7 +13,7 @@ const InstructionConfig = ({ instruction, onInstructionChange, onRemove, number,
     <div>
         {number}.
         <select value={instruction.type} onChange={(e) => onInstructionChange(getInstruction(e.target.value, instruction))}>
-            {options.map(o => {return <option value={o}>{o}</option>})}
+            {options.map(o => {return <option value={o} key={o}>{o}</option>})}
         </select>
         {instruction.type === 'output' ? <DirectionSelect direction={instruction.direction} onDirectionChange={(direction) => onInstructionChange({...instruction, direction})} /> : null}
         <button onClick={() => onRemove()}>delete</button>

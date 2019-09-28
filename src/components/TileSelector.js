@@ -4,7 +4,7 @@ import ConveyorConfig from './configs/ConveyorConfig';
 import MachineConfig from './configs/MachineConfig';
 
 var tileConfigs = [
-    {name: 'conveyorUp', type: 'conveyor', direction: 'up'},
+    {name: 'conveyorUp', type: 'conveyor', instructions: [{type: 'output', direction: 'up'}]},
     {name: 'machine', type: 'machine', instructions: []},
     {name: 'mixing', type: 'mixing', instructions:  []},
     {name: 'cooking', type: 'cooking', instructions: []},

@@ -4,7 +4,7 @@ import DirectionSelect from './DirectionSelect';
 const ConveyorConfig = ({ config, onConfigChange }) => (
     <div>
        <label>Direction: </label>
-        <DirectionSelect direction={config.direction} onDirectionChange={(direction) => onConfigChange({ direction })} />
+        <DirectionSelect direction={config.instructions[0].direction} onDirectionChange={(direction) => onConfigChange({ instructions: [{ type: 'output', direction}] })} />
     </div>
 )
 

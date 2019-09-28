@@ -32,9 +32,6 @@ const getNewIndex = (direction, index, width, arrayLength) => {
 }
 
 const process = (config, objects, index, width, arrayLength, instructions) => {
-    if(config.type === 'conveyor' && objects && objects.length) {
-        return { objects, index: getNewIndex(config.direction, index, width, arrayLength) }
-    }
     if(instructions.length) {
         const nextInstruction = instructions[0];
         return processInstruction(nextInstruction, index, width, arrayLength, config.type, objects);
@@ -146,19 +143,18 @@ const Grid = ({ width, height, selectedTile, running }) => {
             const currentObjects = objects[i];
             const currentInstructionSet = instructions[i];
             if(currentTile) {
-                if(currentTile.type === 'cooking') {
-                    console.log(currentTile.instructions, currentInstructionSet)
-                }
                 if(currentInstructionSet.length === 0 && currentObjects && currentObjects.length && currentTile.instructions) {
                     newInstructions[i] = currentTile.instructions;
                 } else if(currentInstructionSet.length > 0) {
                     newInstructions[i] = currentInstructionSet.filter((_, index) => index !== 0)
                 }
-                const newState = process(currentTile, currentObjects, i, width, newArray.length, newInstructions[i]);
+                if(currentObjects && currentObjects.length) {
+                    const newState = process(currentTile, currentObjects, i, width, newArray.length, newInstructions[i]);
 
-                if(newState.objects && newState.objects.length && newState.index !== null) {
-                    console.log(`setting index ${newState.index} to ${JSON.stringify(newState.objects)}`);
-                    newArray[newState.index] = [...newArray[newState.index], ...newState.objects];
+                    if(newState.objects && newState.objects.length && newState.index !== null) {
+                        console.log(`setting index ${newState.index} to ${JSON.stringify(newState.objects)}`);
+                        newArray[newState.index] = [...newArray[newState.index], ...newState.objects];
+                    }
                 }
             }
         }

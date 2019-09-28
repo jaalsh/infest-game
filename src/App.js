@@ -4,7 +4,7 @@ import Grid from './components/Grid';
 import TileSelector from './components/TileSelector';
 
 function App() {
-  const [selectedTile, setSelectedTile] = useState({type: 'conveyor', direction: 'left'});
+  const [selectedTile, setSelectedTile] = useState({type: 'conveyor', instructions: [{ type: 'output', direction: 'up'}]});
   const [running, setRunning] = useState(false);
 
   return (

@@ -3,7 +3,7 @@ import Tile from './Tile'
 
 const ConveyorTile = ({ config, objects }) => {
     return (
-        <Tile imageName={`conveyor_${config.direction}`} config={config} objectImageNames={objects}/>
+        <Tile imageName={`conveyor_${config.instructions[0].direction}`} config={config} objectImageNames={objects}/>
     );
   };
 
