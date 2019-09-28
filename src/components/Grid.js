@@ -30,26 +30,31 @@ const getNewIndex = (direction, index, width, arrayLength) => {
     return newIndex;
 }
 
-const process = (config, object, index, width, arrayLength, instructions) => {
-    if(config.type === 'conveyor' && object) {
-        return getNewIndex(config.direction, index, width, arrayLength)
+const process = (config, objects, index, width, arrayLength, instructions) => {
+    if(config.type === 'conveyor' && objects && objects.length) {
+        return { objects, index: getNewIndex(config.direction, index, width, arrayLength) }
     }
     if(config.type === 'mixing') {
-        console.log(instructions);
         if(instructions.length) {
             const nextInstruction = instructions[0];
-            return processInstruction(nextInstruction, index, width, arrayLength);
+            return processInstruction(nextInstruction, index, width, arrayLength, config.type, objects);
         }
     }
-    return index;
+    return {objects, index };
 }
 
-const processInstruction = (nextInstruction, index, width, arrayLength) => {
+const processInstruction = (nextInstruction, index, width, arrayLength, type, objects) => {
     if(nextInstruction.type === 'output') {
         console.log('output', nextInstruction, getNewIndex(nextInstruction.direction, index, width, arrayLength))
-        return getNewIndex(nextInstruction.direction, index, width, arrayLength);
+        return {objects, index: getNewIndex(nextInstruction.direction, index, width, arrayLength)};
     }
-    return index;
+    if(nextInstruction.type === 'run') {
+        if(type === 'mixing') {
+            return {objects: mixing(objects), index}
+        }
+    }
+    return { objects, index };
+}
 
 const recipes = [
     { ingredients: ["eggs", "cake_mix"], output: "batter" },
@@ -57,25 +62,31 @@ const recipes = [
     { ingredients: ["cupcakes", "sprinkles"], output: "batter_with_sprinkles" }
 ]
 
-const mixing = (objects) => {
-    if (objects && objects.length) {
-        if (objects.length === 1) return objects[0];
+const arrayEquals = (a, b) => {
+    if (a.length !== b.length) {
+      return false
+    }
+    const aSorted = a.sort()
+    const bSorted = b.sort()
+  
+  
+    return aSorted
+      .map((val, i) => bSorted[i] === val)
+      .every(isSame => isSame)
+  }
 
-        for (var i = 0; i = recipes.length; i++) {
-            var ingredients = recipes[i].ingredients;
-            var validRecipeExists = objects.every(o => ingredients.includes(o));
-            if (validRecipeExists) {
-                return recipes[i].output;
-            }
+const mixing = (objects) => {
+    console.log('mixing');
+    if (objects && objects.length) {
+        if (objects.length === 1) return objects;
+
+        const validRecipe = recipes.find(r => arrayEquals(r.ingredients, objects));
+        if(validRecipe) {
+            return [validRecipe.output];
         }
 
-        return "ruined_food"
+        return ["ruined_food"]
     }
-}
-
-const processInstruction = (nextInstruction, index) => {
-
->>>>>>> 0451420be680bcbbd872741652a9104ea4a64b1c
 }
 
 const outsideBounds = (newIndex, oldIndex, direction, length, width) => {
@@ -94,28 +105,32 @@ const isOnDifferentLine = (newIndex, oldIndex, width) => {
 
 const Grid = ({ width, height, selectedTile, running }) => {
     const [tiles, setTiles] = useState(new Array(width * height).fill(null).map(() => ({type: 'factory'})));
-    const [objects, setObjects] = useState(new Array(width * height).fill([]).map((o, i) => i === 0 ? ["eggs"] : o));
+    const [objects, setObjects] = useState(new Array(width * height).fill([]).map((o, i) => i === 0 ? ["eggs"] : i === 5 ? ["cake_mix"] : o));
     const [instructions, setInstructions] = useState(new Array(width * height).fill([]));
 
     useInterval(() => {
+        
         if(!running) { 
             return;
         }
-        const newArray = new Array(width * height).fill(null);
+        
+        const newArray = new Array(width * height).fill([]);
         const newInstructions = new Array(width * height).fill([]);
         for(let i = 0; i < tiles.length; i++) {
             const currentTile = tiles[i];
-            const currentObject = objects[i];
+            const currentObjects = objects[i];
             const currentInstructionSet = instructions[i];
             if(currentTile) {
-                if(currentInstructionSet.length === 0 && currentObject && currentTile.instructions) {
+                if(currentInstructionSet.length === 0 && currentObjects && currentObjects.length && currentTile.instructions) {
                     newInstructions[i] = currentTile.instructions;
                 } else if(currentInstructionSet.length > 0) {
                     newInstructions[i] = currentInstructionSet.filter((_, index) => index !== 0)
                 }
-                const newIndex = process(currentTile, currentObject, i, width, newArray.length, newInstructions[i]);
-                if(currentObject && newIndex !== null) {
-                    newArray[newIndex] = currentObject;
+                const newState = process(currentTile, currentObjects, i, width, newArray.length, newInstructions[i]);
+
+                if(newState.objects && newState.objects.length && newState.index !== null) {
+                    console.log(`setting index ${newState.index} to ${JSON.stringify(newState.objects)}`);
+                    newArray[newState.index] = [...newArray[newState.index], ...newState.objects];
                 }
             }
         }

@@ -3,7 +3,7 @@ import Tile from './Tile'
 
 const MixingTile = ({ config, objects }) => {
     return (
-        <Tile imageName='mixing' objectImageNames={objects} config={config} />
+        <Tile imageName={objects && objects.length ? 'mixing_green' : 'mixing'} config={config} />
     );
   };
 
