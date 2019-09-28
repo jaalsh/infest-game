@@ -50,6 +50,32 @@ const processInstruction = (nextInstruction, index, width, arrayLength) => {
         return getNewIndex(nextInstruction.direction, index, width, arrayLength);
     }
     return index;
+
+const recipes = [
+    { ingredients: ["eggs", "cake_mix"], output: "batter" },
+    { ingredients: ["cupcakes", "icing"], output: "cupcakes_with_icing" },
+    { ingredients: ["cupcakes", "sprinkles"], output: "batter_with_sprinkles" }
+]
+
+const mixing = (objects) => {
+    if (objects && objects.length) {
+        if (objects.length === 1) return objects[0];
+
+        for (var i = 0; i = recipes.length; i++) {
+            var ingredients = recipes[i].ingredients;
+            var validRecipeExists = objects.every(o => ingredients.includes(o));
+            if (validRecipeExists) {
+                return recipes[i].output;
+            }
+        }
+
+        return "ruined_food"
+    }
+}
+
+const processInstruction = (nextInstruction, index) => {
+
+>>>>>>> 0451420be680bcbbd872741652a9104ea4a64b1c
 }
 
 const outsideBounds = (newIndex, oldIndex, direction, length, width) => {
