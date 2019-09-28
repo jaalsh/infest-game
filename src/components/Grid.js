@@ -1,10 +1,9 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import ConfigurableTile from './ConfigurableTile';
-import GameObject from './objects/GameObject';
 import useInterval from '../hooks/useInterval';
 
-const getTile = (config) => {
-    return <ConfigurableTile config={config}/>;
+const getTile = (config, object) => {
+    return <ConfigurableTile config={config} object={object} />;
 }
 
 const process = (config, object, index, width) => {
@@ -25,11 +24,14 @@ const process = (config, object, index, width) => {
     return index;
 }
 
-const Grid = ({ width, height, selectedTile }) => {
+const Grid = ({ width, height, selectedTile, running }) => {
     const [tiles, setTiles] = useState(new Array(width * height).fill(null).map(() => ({type: 'factory'})));
-    const [objects, setObjects] = useState(new Array(width * height).fill(null).map((o, i) => i === 0 ? <GameObject objectImageName="eggs" /> : o));
+    const [objects, setObjects] = useState(new Array(width * height).fill(null).map((o, i) => i === 0 ? "eggs" : o));
 
     useInterval(() => {
+        if(!running) { 
+            return;
+        }
         const newArray = new Array(width * height).fill(null)
         for(let i = 0; i < tiles.length; i++) {
             const currentTile = tiles[i];
@@ -52,15 +54,10 @@ const Grid = ({ width, height, selectedTile }) => {
         }}>
             {(tiles || []).map((t, i) => 
                 <div key={i} style={{ gridColumn: (i % width) + 1, gridRow: Math.floor(i / width) + 1, cursor:'pointer'}} onClick={() => setTiles((prev => prev.map((item, index) => index === i ? selectedTile: item)))}>
-                    {getTile(t)}
+                    {getTile(t, objects[i])}
                 </div>
             )}
 
-            {(objects || []).map((o, i) => 
-                <div key={i} style={{ gridColumn: (i % width) + 1, gridRow: Math.floor(i / width) + 1, cursor:'pointer'}}>
-                    {o}
-                </div>
-            )}
         </div>
     )
 };

@@ -3,21 +3,18 @@ import FactoryTile from './tiles/FactoryTile';
 import ConveyorTile from './tiles/ConveyorTile';
 import MachineTile from './tiles/MachineTile';
 import MixingTile from './tiles/MixingTile';
-import PowerTile from './tiles/PowerTile';
 
-const ConfigurableTile = ({ config }) => {
+const ConfigurableTile = ({ config, object }) => {
     const getTileToRender = () => {
         switch (config.type){
             case 'conveyor':
-                return <ConveyorTile config={config} />
+                return <ConveyorTile config={config} object={object} />
             case 'machine':
-                return <MachineTile config={config} />
+                return <MachineTile config={config} object={object} />
             case 'mixing':
-                return <MixingTile config={config} />
-            case 'power':
-                return <PowerTile config={config} />
+                return <MixingTile config={config} object={object} />
             default:
-                return <FactoryTile config={config} />
+                return <FactoryTile config={config} object={object} />
         }
     }
 
