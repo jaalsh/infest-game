@@ -14,6 +14,7 @@ const InstructionConfig = ({ instruction, onInstructionChange, onRemove, number}
         {number}.
         <select value={instruction.type} onChange={(e) => onInstructionChange(getInstruction(e.target.value, instruction))}>
             <option value="output">output</option>
+            <option value="run">run</option>
             <option value="wait">wait</option>
         </select>
         {instruction.type === 'output' ? <DirectionSelect direction={instruction.direction} onDirectionChange={(direction) => onInstructionChange({...instruction, direction})} /> : null}
