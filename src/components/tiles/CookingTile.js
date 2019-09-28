@@ -3,7 +3,7 @@ import Tile from './Tile'
 
 const CookingTile = ({config, objects}) => {
     return (
-        <Tile imageName='cooking' config={config} objectImageNames={objects}/>
+        <Tile imageName={objects && objects.length ? 'cooking_green' : 'cooking'} config={config}/>
     );
   };
 

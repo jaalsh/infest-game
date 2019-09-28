@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import ConfigurableTile from './ConfigurableTile';
 import useInterval from '../hooks/useInterval';
+import usePrevious from '../hooks/usePrevious';
 
 const getTile = (config, objects) => {
     return <ConfigurableTile config={config} objects={objects} />;
@@ -34,23 +35,23 @@ const process = (config, objects, index, width, arrayLength, instructions) => {
     if(config.type === 'conveyor' && objects && objects.length) {
         return { objects, index: getNewIndex(config.direction, index, width, arrayLength) }
     }
-    if(config.type === 'mixing') {
-        if(instructions.length) {
-            const nextInstruction = instructions[0];
-            return processInstruction(nextInstruction, index, width, arrayLength, config.type, objects);
-        }
+    if(instructions.length) {
+        const nextInstruction = instructions[0];
+        return processInstruction(nextInstruction, index, width, arrayLength, config.type, objects);
     }
     return {objects, index };
 }
 
 const processInstruction = (nextInstruction, index, width, arrayLength, type, objects) => {
     if(nextInstruction.type === 'output') {
-        console.log('output', nextInstruction, getNewIndex(nextInstruction.direction, index, width, arrayLength))
         return {objects, index: getNewIndex(nextInstruction.direction, index, width, arrayLength)};
     }
     if(nextInstruction.type === 'run') {
         if(type === 'mixing') {
-            return {objects: mixing(objects), index}
+            return {objects: mix(objects), index}
+        }
+        if(type === 'cooking') {
+            return {objects: cook(objects), index}
         }
     }
     return { objects, index };
@@ -59,8 +60,12 @@ const processInstruction = (nextInstruction, index, width, arrayLength, type, ob
 const recipes = [
     { ingredients: ["eggs", "cake_mix"], output: "batter" },
     { ingredients: ["cupcakes", "icing"], output: "cupcakes_with_icing" },
-    { ingredients: ["cupcakes", "sprinkles"], output: "batter_with_sprinkles" }
-]
+    { ingredients: ["cupcakes", "sprinkles"], output: "cupcakes_with_sprinkles" }
+];
+
+const cooking = [
+    { ingredient: "batter", output: "cupcakes" }
+];
 
 const arrayEquals = (a, b) => {
     if (a.length !== b.length) {
@@ -75,14 +80,26 @@ const arrayEquals = (a, b) => {
       .every(isSame => isSame)
   }
 
-const mixing = (objects) => {
-    console.log('mixing');
+const mix = (objects) => {
     if (objects && objects.length) {
         if (objects.length === 1) return objects;
 
         const validRecipe = recipes.find(r => arrayEquals(r.ingredients, objects));
         if(validRecipe) {
             return [validRecipe.output];
+        }
+
+        return ["ruined_food"]
+    }
+}
+
+const cook = (objects) => {
+    if (objects && objects.length) {
+        if (objects.length === 1) {
+            const validCooking = cooking.find(c => c.ingredient === objects[0]);
+            if (validCooking) {
+                return [validCooking.output];
+            }
         }
 
         return ["ruined_food"]
@@ -104,13 +121,21 @@ const isOnDifferentLine = (newIndex, oldIndex, width) => {
 }
 
 const Grid = ({ width, height, selectedTile, running }) => {
+    const initialObjectState = new Array(width * height).fill([]).map((o, i) => i === 0 || i === 2 ? ["eggs"] : i === 5 || i === 18 ? ["cake_mix"] : i === 34 ? ["sprinkles"] : i === 49 ? ["icing"] : o);
+
     const [tiles, setTiles] = useState(new Array(width * height).fill(null).map(() => ({type: 'factory'})));
-    const [objects, setObjects] = useState(new Array(width * height).fill([]).map((o, i) => i === 0 ? ["eggs"] : i === 5 ? ["cake_mix"] : o));
+    const [objects, setObjects] = useState(initialObjectState);
     const [instructions, setInstructions] = useState(new Array(width * height).fill([]));
+
+    const prevRunning = usePrevious(running);
+
 
     useInterval(() => {
         
-        if(!running) { 
+        if(!running) {
+            if(prevRunning) {
+                setObjects(initialObjectState);
+            }
             return;
         }
         
@@ -121,6 +146,9 @@ const Grid = ({ width, height, selectedTile, running }) => {
             const currentObjects = objects[i];
             const currentInstructionSet = instructions[i];
             if(currentTile) {
+                if(currentTile.type === 'cooking') {
+                    console.log(currentTile.instructions, currentInstructionSet)
+                }
                 if(currentInstructionSet.length === 0 && currentObjects && currentObjects.length && currentTile.instructions) {
                     newInstructions[i] = currentTile.instructions;
                 } else if(currentInstructionSet.length > 0) {
