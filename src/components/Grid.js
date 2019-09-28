@@ -1,13 +1,14 @@
 import React, {useState, useEffect} from 'react';
 import ConfigurableTile from './ConfigurableTile';
+import GameObject from './objects/GameObject';
 
 const getTile = (config) => {
-    console.log(config)
     return <ConfigurableTile config={config}/>;
 }
 
 const Grid = ({ width, height, selectedTile }) => {
     const [tiles, setTiles] = useState(new Array(width * height).fill(null).map(() => <ConfigurableTile config={{type: 'factory'}}/>));
+    const [objects, setObjects] = useState(new Array(width * height).fill(null));
 
     return (
         <div style={{
@@ -18,7 +19,14 @@ const Grid = ({ width, height, selectedTile }) => {
             {(tiles || []).map((t, i) => 
                 <div key={i} style={{ gridColumn: (i % width) + 1, gridRow: Math.floor(i / width) + 1, cursor:'pointer'}} onClick={() => setTiles((prev => prev.map((item, index) => index === i ? getTile(selectedTile): item)))}>
                     {t}
-                </div>)}
+                </div>
+            )}
+
+            {(objects || []).map((o, i) => 
+                <div key={i} style={{ gridColumn: (i % width) + 1, gridRow: Math.floor(i / width) + 1, cursor:'pointer'}}>
+                    {o}
+                </div>
+            )}
         </div>
     )
 };
