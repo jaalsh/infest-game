@@ -59,7 +59,7 @@ const isOnDifferentLine = (newIndex, oldIndex, width) => {
 
 const Grid = ({ width, height, selectedTile, running }) => {
     const [tiles, setTiles] = useState(new Array(width * height).fill(null).map(() => ({type: 'factory'})));
-    const [objects, setObjects] = useState(new Array(width * height).fill(null).map((o, i) => i === 0 ? "eggs" : o));
+    const [objects, setObjects] = useState(new Array(width * height).fill([]).map((o, i) => i === 0 ? ["eggs"] : o));
     const [instructions, setInstructions] = useState(new Array(width * height).fill([]));
 
     useInterval(() => {
