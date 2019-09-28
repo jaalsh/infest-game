@@ -1,9 +1,9 @@
 import React from 'react';
 import Tile from './Tile'
 
-const MachineTile = () => {
+const MachineTile = ({config}) => {
     return (
-        <Tile imageName='machine'/>
+        <Tile imageName='machine' config={config}/>
     );
   };
 
