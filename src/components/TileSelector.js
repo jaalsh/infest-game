@@ -1,13 +1,13 @@
 import React from 'react';
 import ConfigurableTile from './ConfigurableTile';
 import ConveyorConfig from './configs/ConveyorConfig';
-import MixingConfig from './configs/MixingConfig';
+import MachineConfig from './configs/MachineConfig';
 
 var tileConfigs = [
     {name: 'conveyorUp', type: 'conveyor', direction: 'up'},
     {name: 'machine', type: 'machine'},
     {name: 'mixing', type: 'mixing', instructions:  []},
-    {name: 'power', type: 'power'},
+    {name: 'cooking', type: 'cooking', instructions: []},
     {name: 'factory', type: 'factory_tile'}
 ];
 
@@ -22,7 +22,7 @@ const TileSelector = ({selectedTile, onTileChanged}) => {
     </div>
     <div style={{ padding: 5, height: 200}}>
         {selectedTile.type === 'conveyor' ? <ConveyorConfig config={selectedTile} onConfigChange={(config) => onTileChanged({ ...selectedTile, ...config })} /> : 
-        selectedTile.type === 'mixing' ? <MixingConfig config={selectedTile} onConfigChange={(config) => onTileChanged({ ...selectedTile, ...config })} /> : null}
+        selectedTile.type === 'mixing' || selectedTile.type === 'cooking' ? <MachineConfig config={selectedTile} onConfigChange={(config) => onTileChanged({ ...selectedTile, ...config })} /> : null}
     </div>
     </div>
 }
