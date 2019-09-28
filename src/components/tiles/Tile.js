@@ -9,7 +9,7 @@ const Tile = ({ imageName, objectImageNames, config }) => {
     return (
         <div style={{ position: 'relative' }}>
             <img src={imageSource} width={dimension} height={dimension} alt="base_tile" title={config.instructions ? config.instructions.map(i => JSON.stringify(i)).join("\r\n") : "no instructions"} />
-            {objectImageNames && <GameObject style={{position: 'absolute', left: 0}} objectImageName={objectImageNames[0]} width={dimension} height={dimension}  />}
+            {objectImageNames && objectImageNames.length > 0 && <GameObject style={{position: 'absolute', left: 0}} objectImageName={objectImageNames[0]} width={dimension} height={dimension}  />}
         </div>
     );
   };

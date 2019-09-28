@@ -2,45 +2,54 @@ import React, {useState} from 'react';
 import ConfigurableTile from './ConfigurableTile';
 import useInterval from '../hooks/useInterval';
 
-const getTile = (config, object) => {
-    return <ConfigurableTile config={config} object={object} />;
+const getTile = (config, objects) => {
+    return <ConfigurableTile config={config} objects={objects} />;
+}
+
+const getNewIndex = (direction, index, width, arrayLength) => {
+    let newIndex = index;
+    switch(direction) {
+        case 'right': 
+            newIndex = index + 1;
+            break;
+        case 'left':
+            newIndex =index - 1;
+            break;
+        case 'up':
+            newIndex = index - width;
+            break;
+        case 'down':
+            newIndex = index + width;
+            break;
+        default:
+            break
+    };
+    if(outsideBounds(newIndex, index, direction, arrayLength, width)) {
+        return null;
+    }
+    return newIndex;
 }
 
 const process = (config, object, index, width, arrayLength, instructions) => {
     if(config.type === 'conveyor' && object) {
-        let newIndex = index;
-        switch(config.direction) {
-            case 'right': 
-                newIndex = index + 1;
-                break;
-            case 'left':
-                newIndex =index - 1;
-                break;
-            case 'up':
-                newIndex = index - width;
-                break;
-            case 'down':
-                newIndex = index + width;
-                break;
-            default:
-                break
-        };
-        if(outsideBounds(newIndex, index, config.direction, arrayLength, width)) {
-            return null;
-        }
-        return newIndex;
+        return getNewIndex(config.direction, index, width, arrayLength)
     }
-    if(config.type === 'mixer') {
+    if(config.type === 'mixing') {
+        console.log(instructions);
         if(instructions.length) {
             const nextInstruction = instructions[0];
-            return processInstruction(nextInstruction, index);
+            return processInstruction(nextInstruction, index, width, arrayLength);
         }
     }
     return index;
 }
 
-const processInstruction = (nextInstruction, index) => {
-
+const processInstruction = (nextInstruction, index, width, arrayLength) => {
+    if(nextInstruction.type === 'output') {
+        console.log('output', nextInstruction, getNewIndex(nextInstruction.direction, index, width, arrayLength))
+        return getNewIndex(nextInstruction.direction, index, width, arrayLength);
+    }
+    return index;
 }
 
 const outsideBounds = (newIndex, oldIndex, direction, length, width) => {
@@ -66,18 +75,26 @@ const Grid = ({ width, height, selectedTile, running }) => {
         if(!running) { 
             return;
         }
-        const newArray = new Array(width * height).fill(null)
+        const newArray = new Array(width * height).fill(null);
+        const newInstructions = new Array(width * height).fill([]);
         for(let i = 0; i < tiles.length; i++) {
             const currentTile = tiles[i];
             const currentObject = objects[i];
+            const currentInstructionSet = instructions[i];
             if(currentTile) {
-                const newIndex = process(currentTile, currentObject, i, width, newArray.length, instructions[i]);
+                if(currentInstructionSet.length === 0 && currentObject && currentTile.instructions) {
+                    newInstructions[i] = currentTile.instructions;
+                } else if(currentInstructionSet.length > 0) {
+                    newInstructions[i] = currentInstructionSet.filter((_, index) => index !== 0)
+                }
+                const newIndex = process(currentTile, currentObject, i, width, newArray.length, newInstructions[i]);
                 if(currentObject && newIndex !== null) {
                     newArray[newIndex] = currentObject;
                 }
             }
         }
         setObjects(newArray);
+        setInstructions(newInstructions);
     }, 500);
 
     return (
