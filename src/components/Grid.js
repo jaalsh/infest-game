@@ -6,27 +6,61 @@ const getTile = (config, object) => {
     return <ConfigurableTile config={config} object={object} />;
 }
 
-const process = (config, object, index, width) => {
+const process = (config, object, index, width, arrayLength, instructions) => {
     if(config.type === 'conveyor' && object) {
+        let newIndex = index;
         switch(config.direction) {
             case 'right': 
-                return index + 1;
+                newIndex = index + 1;
+                break;
             case 'left':
-                return index - 1;
+                newIndex =index - 1;
+                break;
             case 'up':
-                return index - width;
+                newIndex = index - width;
+                break;
             case 'down':
-                return index + width;
+                newIndex = index + width;
+                break;
             default:
-                return index;
+                break
         };
+        if(outsideBounds(newIndex, index, config.direction, arrayLength, width)) {
+            return null;
+        }
+        return newIndex;
+    }
+    if(config.type === 'mixer') {
+        if(instructions.length) {
+            const nextInstruction = instructions[0];
+            return processInstruction(nextInstruction, index);
+        }
     }
     return index;
+}
+
+const processInstruction = (nextInstruction, index) => {
+
+}
+
+const outsideBounds = (newIndex, oldIndex, direction, length, width) => {
+    if(newIndex < 0 || newIndex >= length) {
+        return true;
+    }
+    if(direction === 'left' || direction === 'right') {
+        return isOnDifferentLine(newIndex, oldIndex, width);
+    }
+    return false;
+}
+
+const isOnDifferentLine = (newIndex, oldIndex, width) => {
+    return (Math.floor(newIndex / width) !== Math.floor(oldIndex / width));
 }
 
 const Grid = ({ width, height, selectedTile, running }) => {
     const [tiles, setTiles] = useState(new Array(width * height).fill(null).map(() => ({type: 'factory'})));
     const [objects, setObjects] = useState(new Array(width * height).fill(null).map((o, i) => i === 0 ? "eggs" : o));
+    const [instructions, setInstructions] = useState(new Array(width * height).fill([]));
 
     useInterval(() => {
         if(!running) { 
@@ -37,8 +71,8 @@ const Grid = ({ width, height, selectedTile, running }) => {
             const currentTile = tiles[i];
             const currentObject = objects[i];
             if(currentTile) {
-                const newIndex = process(currentTile, currentObject, i, width);
-                if(currentObject) {
+                const newIndex = process(currentTile, currentObject, i, width, newArray.length, instructions[i]);
+                if(currentObject && newIndex !== null) {
                     newArray[newIndex] = currentObject;
                 }
             }
