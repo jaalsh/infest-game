@@ -5,7 +5,7 @@ import MachineConfig from './configs/MachineConfig';
 
 var tileConfigs = [
     {name: 'conveyorUp', type: 'conveyor', direction: 'up'},
-    {name: 'machine', type: 'machine'},
+    {name: 'machine', type: 'machine', instructions: []},
     {name: 'mixing', type: 'mixing', instructions:  []},
     {name: 'cooking', type: 'cooking', instructions: []},
     {name: 'factory', type: 'factory_tile'}
@@ -20,10 +20,11 @@ const TileSelector = ({selectedTile, onTileChanged}) => {
             </div>)
         })}
     </div>
-    <div style={{ padding: 5, height: 200}}>
-        {selectedTile.type === 'conveyor' ? <ConveyorConfig config={selectedTile} onConfigChange={(config) => onTileChanged({ ...selectedTile, ...config })} /> : 
-        selectedTile.type === 'mixing' || selectedTile.type === 'cooking' ? <MachineConfig config={selectedTile} onConfigChange={(config) => onTileChanged({ ...selectedTile, ...config })} /> : null}
-    </div>
+        <div style={{ padding: 5, height: 200}}>
+            {selectedTile.type === 'conveyor' ? <ConveyorConfig config={selectedTile} onConfigChange={(config) => onTileChanged({ ...selectedTile, ...config })} /> : 
+            selectedTile.type === 'mixing' || selectedTile.type === 'cooking' ? <MachineConfig config={selectedTile} onConfigChange={(config) => onTileChanged({ ...selectedTile, ...config })} /> 
+            : selectedTile.type === 'machine' ? <MachineConfig options={["output", "wait"]} config={selectedTile} onConfigChange={(config) => onTileChanged({ ...selectedTile, ...config })} /> : null}
+        </div>
     </div>
 }
 

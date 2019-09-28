@@ -2,7 +2,6 @@ import React from 'react';
 
 const dimension = '64px'
 
-
 const GameObject = ({ style, objectImageName }) => {
     const imageSource = `${process.env.PUBLIC_URL}/assets/images/objects/${objectImageName}.png`
 
