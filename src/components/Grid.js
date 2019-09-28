@@ -24,18 +24,6 @@ const process = (config, object, index, width) => {
     return index;
 }
 
-// list of recipes
-
-const mixing = (objects) => {
-    ///1 object return object
-    // 2 objects
-    // cake mix and eggs - cake batter mix
-    // cake icing - cake with icing
-    // cake sprinkles - cake with sprinkles
-
-    // any 2 other, or 2 or more and isn't a recipe. output ruined or fail??
-}
-
 const Grid = ({ width, height, selectedTile, running }) => {
     const [tiles, setTiles] = useState(new Array(width * height).fill(null).map(() => ({type: 'factory'})));
     const [objects, setObjects] = useState(new Array(width * height).fill(null).map((o, i) => i === 0 ? "eggs" : o));
